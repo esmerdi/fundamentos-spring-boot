@@ -56,11 +56,18 @@ public class FundamentosApplication implements CommandLineRunner {
 
     private void getInformationJpqlFromUser() {
         LOGGER.info("Usuario con el metodo findByUserEmail" +
-                userRepository.findByUserEmail("emduran21@gmail.com").orElseThrow(()-> new RuntimeException("No se encontró el usuario")));
+                userRepository.findByUserEmail("emduran21@gmail.com").orElseThrow(() -> new RuntimeException("No se encontró el usuario")));
 
         userRepository.findAndSort("Esmerdi", Sort.by("id").descending())
                 .stream()
-                .forEach(user -> LOGGER.info("Usuario con método sort "+user));
+                .forEach(user -> LOGGER.info("Usuario con método sort " + user));
+
+        userRepository.findByName("Esmerdi")
+                .stream()
+                .forEach(user -> LOGGER.info("Usuario con query method" + user));
+
+        LOGGER.info("Usuario con query method findByEmailAndName" + userRepository.findByEmailAndName("julia@gmail.com", "Julia")
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
     }
 
     private void saveUsersInDatabase() {
