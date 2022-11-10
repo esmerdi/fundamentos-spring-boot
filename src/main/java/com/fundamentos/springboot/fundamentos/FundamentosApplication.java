@@ -68,11 +68,21 @@ public class FundamentosApplication implements CommandLineRunner {
 
         LOGGER.info("Usuario con query method findByEmailAndName" + userRepository.findByEmailAndName("julia@gmail.com", "Julia")
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
+
+        userRepository.findByNameLike("%Es%").stream().forEach(user -> LOGGER.info("Usuario findByNameLike" + user));
+        userRepository.findByNameOrEmail(null, "emduran21@gmail.com").stream().forEach(user -> LOGGER.info("Usuario findByNameOrEmail" + user));
+
+        userRepository.findByBirthDateBetween(LocalDate.of(2021, 11, 10), LocalDate.of(2022, 11, 3)).stream()
+                .forEach(user -> LOGGER.info("Usuarios con intervalos de fechas: " + user));
+
+        userRepository.findByNameLikeOrderByIdDesc("%Esmerdi%").stream().forEach(user -> LOGGER.info("Usuario encontrado con like y ordenado" + user));
+
+        userRepository.findByNameContainingOrderByIdDesc("Esmerdi").stream().forEach(user -> LOGGER.info("Usuario encontrado con containing y ordenado" + user));
     }
 
     private void saveUsersInDatabase() {
         User user1 = new User("Esmerdi", "emduran21@gmail.com", LocalDate.of(2021, 03, 10));
-        User user2 = new User("Julia", "julia@gmail.com", LocalDate.of(2010, 03, 10));
+        User user2 = new User("Julia", "julia@gmail.com", LocalDate.of(2022, 03, 10));
         User user3 = new User("Andrea", "andrea@gmail.com", LocalDate.of(2011, 03, 10));
         User user4 = new User("Catalina", "cata@gmail.com", LocalDate.of(1980, 03, 10));
         User user5 = new User("Esmerdi2", "esmerdi@gmail.com", LocalDate.of(1990, 03, 10));
