@@ -19,14 +19,33 @@ public class UserService {
     }
 
     /*@Transactional: Si existe algún error a través de este insert, nos permitirá hacer un rollback de todas las transacciones
-    * que se realizaron en nuestra base de datos*/
+     * que se realizaron en nuestra base de datos*/
     @Transactional
-    public void saveTransactional(List<User> users){
-        users.stream().peek(user -> LOG.info("Usuario insertado: "+user)) //peek para ir mostrando en pantalla.
+    public void saveTransactional(List<User> users) {
+        users.stream().peek(user -> LOG.info("Usuario insertado: " + user)) //peek para ir mostrando en pantalla.
                 .forEach(userRepository::save);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User save(User request) {
+        return userRepository.save(request);
+    }
+
+    public void delete(Long id) {
+        userRepository.delete(new User(id));
+    }
+
+    public User update(User request, Long id) {
+        return userRepository.findById(id).map(
+                user -> {
+                    user.setEmail(request.getEmail());
+                    user.setBirthDate(request.getBirthDate());
+                    user.setName(request.getName());
+                    return userRepository.save(user);
+                }
+        ).get();
     }
 }
